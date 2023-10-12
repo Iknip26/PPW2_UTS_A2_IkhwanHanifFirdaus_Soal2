@@ -1,4 +1,4 @@
-@extends('layouts')
+@extends('products.layouts')
 
 @section('content')
 
@@ -37,7 +37,7 @@
                             <td>
                                 <form action="{{ route('products.destroy', $product->id) }}" method="post">
                                     @csrf
-                                    @method('DELETE')
+                                    @method('GET')
 
                                     <a href="{{ route('products.show', $product->id) }}" class="btn btn-warning btn-sm"><i class="bi bi-eye"></i> Show</a>
 

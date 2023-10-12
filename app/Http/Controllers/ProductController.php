@@ -6,17 +6,22 @@ use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
+use App\Models\Product;
+use Illuminate\Http\Request;
+// use GuzzleHttp\Psr7\Request;
 
-class Controller extends Controller
+class ProductController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index() : View
     {
-        return view('index', [
-            'products' => Product::latest()->paginate(3)
-        ]);
+        $products = Product::latest()->paginate(3);
+        return view('products.index', compact('products'));
+        // return view('index', [
+        //     'products' => Product::latest()->paginate(3)
+        // ]);
     }
 
     /**
@@ -33,47 +38,47 @@ class Controller extends Controller
     public function store(StoreProductRequest $request) : RedirectResponse
     {
         Product::create($request->all());
-        return redirect()->route('index')
+        return redirect()->route('products.index')
                 ->withSuccess('New product is added successfully.');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Product $product) : View
+    public function show(String $id) : View
     {
-        return view('products.show', [
-            'product' => $products
-        ]);
+        $product = Product::find($id);
+        return view('products.show', compact('product'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Product $product) : View
+    public function edit(String $id) : View
     {
-        return view('products.edit', [
-            'products' => $product
-        ]);
+        $product = Product::find($id);
+        return view('products.edit', compact('product'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateProductRequest $request, Product $product) : RedirectResponse
+    public function update(Request $request, String $id) : RedirectResponse
     {
+        $product = Product::findOrFail($id);
         $product->update($request->all());
-        return redirect()->back()
+        return redirect()->route('products.index')
                 ->withSuccess('Product is updated successfully.');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Product) : RedirectResponse
+    public function destroy(String $id) : RedirectResponse
     {
+        $product = Product::find($id); 
         $product->delete();
-        return redirect()->route('index')
+        return redirect()->route('products.index')
                 ->withSuccess('Product is deleted successfully.');
     }
 }

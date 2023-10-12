@@ -23,7 +23,7 @@
             <div class="card-body">
                 <form action="{{ route('products.update', $product->id) }}" method="post">
                     @csrf
-                    @method("PUT")
+                    @method("POST")
 
                     <div class="mb-3 row">
                         <label for="code" class="col-md-4 col-form-label text-md-end text-start">Code</label>
